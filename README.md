@@ -1,6 +1,6 @@
 # Algoritmi-e-strutture-dati
 
--il file C contiene il testo e la risoluzione in linguaggio C di alcuni esercizi sulla parte di programmazione della materia Algoritmi e Strutture dati
+- il file C contiene il testo e la risoluzione in linguaggio C di alcuni esercizi sulla parte di programmazione della materia Algoritmi e Strutture dati
 aa 2015/2016
 Roma Tre
 
