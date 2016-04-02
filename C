@@ -1,0 +1,190 @@
+Int conta_livello(albero T, int m), che restituisca il numero di nodi presente al livello mdell’albero
+T. Se l’albero Tè vuoto oppure non esiste il livello m nell’albero, la funzione restituirà il valore 0. Ad esempio
+conta_livello(T1, 2)
+restituirà il valore 3.
+
+conta_livello(albero T, int m){
+	if(T==0)
+		return 0;
+	if(m== 0)
+		return = 1;
+	return conta_livello(T->sx, int m-1)+conta_livello(T->dx, int m-1);
+}
+
+int confronta_alberi(albero T1, albero T2){
+	if(T1 == NULL || T2== NULL)
+		return 0;
+	int altezza1 = altezza(T1);
+	int altezza2 = altezza(T2);
+	int i, lungMax, cont;
+	cont =0;
+	lungMax= min(altezza1, altezza2);
+	for(i=0; i<lungMax; i++){
+		int* A1= (int*)calloc(conta_livello(T1, i), sizeof(int));
+		int* A2= (int*)calloc(conta_livello(T2, i), sizeof(int));
+		A1= creaArray(T1,i);
+		A2= creaArray(T2,i);
+		int m= max(conta_livello(T1,i), conta_livello(T2,i));
+		if(confronta_array(A1, A2, m))
+			cont++;
+		}
+		return cont;
+	}
+
+
+int confronta_alberi(albero T1, albero T2) che dati due alberi T1 e T2, conta quanti livelli hanno in comune T1 e T2; T1 e T2 hanno un livello m in comune se i valori interi contenuti dai nodi del livello m di T1 ricorrono anche nei nodi dello stesso livello m in T2.
+
+int confonta_alberi(albero T1, albero T2){
+	return confronta_alberi_aux(T1, T2, 0);
+}
+
+
+int confronta_alberi_aux(albero T1, albero T2, int l){
+	if(T1== NULL || T2== NULL)
+		return 0;
+	if(confronta_array(crea_array(T1, l), crea_array(T2,l), conta_livello(T1, l)))
+		return 1 + max(confronta_alberi_aux(T1->sx, T2->sx, l-1) , confronta_alberi_aux(T1->dx, T2->dx, l-1));
+	else
+		return max(confronta_alberi_aux(T1->sx, T2->sx, l-1), confronta_alberi_aux(T1->dx, T2->dx, l-1));
+}
+
+
+esercizio 1
+scrivi le strutture dati più adeguate per rappresentare l'albero binario di ricerca e la matrice rettangolare e i file header del progetto
+
+#ifndef COMPITO_H_INCLUDED
+#define COMPITO_H_INCLUDED
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct elem{
+	int info;
+	struct elem* sx;
+	struct elem* dx;
+	}nodo;
+
+typedef nodo* albero;
+
+typedef struct nodoL{
+	int info;
+	struct nodoL* next;
+	}nodo_lista;
+
+
+typedef nodo_lista* lista;
+	
+int altezza(albero T);
+int foglie(albero T);
+int** creaMatrice(albero T);
+int max(int a, int b);
+int min(int a, int b);
+void riempiArray(albero T, int* A, int l, int* i);
+int contaDiagonale(albero T, lista L);
+
+#endif
+
+ESERCIZIO 2
+scrivere le funzioni altezza e foglie, che dato un albero binario T di interi restituiscano rispettivamente l'altezza di T e le foglie di T
+
+int altezza(albero T){
+	if(T== NULL)
+		return -1;
+	return 1+ max(altezza(T->sx), altezza(T->dx));
+	}
+
+int max(int a, int b){
+	if(a> b)
+		return a;
+	return b;
+	}
+
+
+int foglie(albero T){
+	if(T == NULL)
+		return 0;
+	if(T!= NULL && T->sx == NULL && T->dx == NULL)
+		return 1;
+	return foglie(T->sx)+ foglie(T->dx);
+}
+
+
+ESERCIZIO 3
+scrivere la funzione creaMatrice che dato un albero binario T di interi restituisca la matrice rettangolare corrispondente all'albero T, le dimensioni di T non sono note a priori
+
+
+int** creaMatrice(albero T){
+	int** A;
+	int H, F, i, j;
+	int k=0;
+	if(T== NULL)
+		return NULL;
+	H= altezza(T)+1;
+	F = foglie(T);
+	A = (int**)calloc(H, sizeof(int*));
+	for(i=0; i< H; i++)
+		A[i] =(int*)calloc(F, sizeof(int));
+	for(i=0; i<H; i++)
+		for(j=0; j<F; j++)
+			A[i][j] =0;
+	for(i=0; i<H; i++)
+		riempiArray(T, A[i], i, &k);
+	return A;
+	}
+
+
+void riempiArray(albero T, int* A, int l, int* i){
+	if(T!= NULL){
+		if(l ==0){
+			A[*i] = T->info;
+			*i = *i+1;
+		}
+		else{
+			riempiArray(T->sx, A, l--, i);
+			riempiArray(T->dx, A, l--, i);
+			}
+	}
+	else return;
+}
+
+ESERCIZIO 4
+scrivi la funzione contaDiagonale che dato un albero binario T di interi e una lista L di interi distinti, conti quanti elementi della lista sono presenti nella diagonale principale della matrice rettangolare corrispondente a T.
+
+int contaDiagonale(albero T, lista L){
+	int H, int F,i;
+	H = altezza(T) +1;
+	F = foglie(T);
+	int** A= (int**)calloc(H,sizeof(int*));
+	for(i=0; i<H; i++)
+		A[i]=(int*)calloc(F,sizeof(int));
+	A = creaMatrice(T);
+	int min, cont;
+	min = min(H, F);
+	cont =0;
+	for(i=0; i<=min; i++){
+		while(L!= NULL){
+			if(A[i][i] == L->info)
+				cont ++;
+		L= L->next;
+		}
+	} return cont;
+}
+
+
+dato un albero nario e un intero che rappresenta il livello dell'albero. Restituisci la somma dei valori dei nodi a quel livello
+
+
+int sommaNodiLivello(Ntree t, int l){
+	if(t==NULL)
+		return 0;
+	if(l==0)
+		return contaFratelli(t);
+	int somma=0;
+	if(t->fratello != NULL)
+		somma = somma+ sommaNodiLivello(t->sx, l--);
+	temp= t->fratello;
+	while(temp){
+		somma= somma+ sommaNodiLivello(temp, l);
+		temp= temp->fratello;
+	}
+	return somma;
+}
