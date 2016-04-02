@@ -1,0 +1,225 @@
+# Algoritmi-e-strutture-dati
+scrivi lo pseudocodice della procedura SEARCH(l,u) che ritorna il riferimento all’elemento i che
+contiene il valore intero u in una lista singolarmente concatenata di interi (oppure NULL se u
+non è nella lista)
+
+SEARCH(l,u)
+	x=l.head
+	while(x!= NULL)
+		if(x.info == u)
+			return x
+		x= x.next
+	return NULL
+
+9. scrivi lo pseudocodice della procedura COMUNI(l 1 ,l 2 ) che ritorna il numero di elementi
+della lista l 1 che sono anche contenuti nella lista l 2
+
+COMUNI(l1, l2)
+	comuni = 0
+	x= l1.head
+	while(x!=NULL)
+		y= l2.head
+		while(y!=NULL)
+			if(x.info == y.info)
+				comuni= comuni+1
+			y= y.next
+		x= x.next
+	return comuni
+
+
+17. scrivi lo pseudocodice della procedura MERGE(l 1 ,l 2 ) che accetti come parametri due
+liste doppiamente concatenate di interi ordinate in senso crescente e restituisca una lista
+ordinata in senso crescente con gli elementi di entrambe
+
+MERGE(l1, l2){
+//l3 è una nuova lista doppiamente concatenata
+	l3.head= NULL
+	x= l1.head
+	y= l2.head
+	while(x!= NULL && y!= NULL)
+		if(x.info < y.info)
+			insert(l3, x.info)
+			x= x.next
+		else
+			insert(l3, x.info)
+			y= y.next
+	while(x != NULL)
+		insert(l3, y.info)
+		x = x.next
+	while(y != NULL)
+		insert(l3, y.info)
+	l4.head= NULL
+	z= l3.head
+	while (z!= NULL)
+		insert(l4, z.info)
+		z = z.next
+	return l4
+}
+
+INSERT(l, u)
+	temp.info = u
+	temp.next= l.head
+	temp.prev = NULL
+	if(l.head != NULL)
+		l.head.prev = temp
+	l.head= temp
+
+
+ALBERI E GRAFI
+
+20. scrivi lo pseudocodice della procedura
+VALORE-NONNO(t) che calcoli il numero di nodi
+dell’albero binario t che hanno lo stesso valore del
+genitore del genitore (cioè del nonno)
+
+VALORE-NONNO(t)
+	return VALORE-NONNO-RIC(t.root)
+
+
+VALORE-NONNO-RIC(n)
+	if (n==NULL) return 0
+	l = VALORE-NONNO-RIC(n.left)
+	r = VALORE-NONNO-RIC(n.right)
+	if(n.parent!=NULL)
+		if(VERIFICA(n))
+			retun r + l + 1
+	return l + r
+
+
+VERIFICA(n)
+	if(n.parent != NULL)
+		if(n.parent.parent != NULL)
+			if(n.info == n.parent.parent.info)
+				retun TRUE
+	return FALSE
+
+scrivi lo pseudocodice della procedura CONNESSE-DUE-ARCHI(A) che accetta in input un grafo non orientato A e produca in output il numero delle componenti connesse di A i cui nodi hanno al massimo due archi
+
+CONNESSE-DUE-ARCHI(A)
+	for i=0 to A.length-1
+		color[i] =0
+	cont = 1
+	for i=0 to A.length-1
+		if color[i] == 0
+			DFS(A, i, color, cont)
+			cont ++
+	output =0
+	for i=1 to cont
+		test = TRUE
+		for k=0 to A.length-1
+			if color[k] == i
+				if ARCHI(A, k) > 2
+					test = FALSE
+	if(test)
+		output++
+	return output
+
+ARCHI(A,v)
+	cont =0
+	x= A[v]
+	while x!=NULL
+		cont++
+		x= x.next
+	retutn cont
+
+DFS(A, i, color, cont)
+	color[i] = cont
+	x = A[i]
+	while x != NULL
+		if color[x.info] == 0
+			DFS(A, x.info, color, cont)
+		x = x.next
+
+
+dato un albero T ritorna un array in cui ogni elemento iesimo contiene la profondità del nodo i dell'albero
+
+DEPTH(T)
+// A è un array di interi
+	DEPTH_RIC(T.root, A, T.root.info)
+	return A
+
+
+DEPTH_RIC( n, A, i)
+	if n== NULL
+		return
+	A[i] = DEPTH-RIEMPI(n)
+	DEPTH_RIC(n.left, A, n.left.info)
+	DEPTH_RIC(n.rigth, A, n.rigth.info)
+	
+
+DEPTH-RIEMPI(n)
+	if n==NULL
+		return -1
+	if(n.parent == NULL)
+		return 0
+	return 1+ DEPTH-RIEMPI(n.parent)
+
+
+scrivi la procedura di un metodo che prende in input un grafo non orientato A, un indice u e una
+distanza d, e restituisce in output il numero di nodi di A che si trovano a distanza maggiore di d
+
+NODI_LONTANI(A, u, d)
+	for i= 0 to A.length-1
+		color[i]=0
+		distanza[i]=0
+	BFS(A, u, color, distanza)
+	cont =0
+	for i=0 to A.length-1
+		if distanza[i] > d
+			cont++
+	return cont
+
+
+BFS(A, u, color, distanza)
+	color[u] = 1
+	EMPTY-QUEUE(q)
+	ENQUEUE(q, u)
+	while( !IS-EMPTY(q))
+		v = DEQUEUE(q)
+		x = A[v]
+		while(x!=NULL)
+			if(color[x.info] ==0)
+				ENQUEUE(q, x.info)
+				color[x.info] =1
+				distanza[x.info] = distanza[v]+1
+		x = x.next
+
+
+
+Un grafo non orientato è rappresentato con un array A in cui ogni elemento A[u] è un riferimento al primo
+elemento della lista di adiacenza doppiamente concatenata del nodo u (con i campi prev, info e next).
+Essendo il grafo non orientato esiste un arco (u,v) per ogni arco (v,u).
+Una componente connessa è un insieme massimale di nodi mutualmente raggiungibili.
+Scrivi lo pseudocodice della procedura COMPONENTI‐CONNESSE‐SIGNIFICATIVE(A) che prende in input un
+grafo non orientato A e produce in output il numero delle componenti connesse che hanno più di un nodo.
+
+COMPONENTI-CONNESSE_SIGNIFICATIVE(A)
+	for i=0 to A.length-1
+		color[i] = 0
+	if(color[i]==0 && lunghezza_lista(A[i] > 1)
+		cont ++
+		DFS(A, i, color)
+
+
+DFS(A, v, color)
+	color[v] = 1
+	x = A[v]
+	while x != NULL
+		if color[x.info]== 0
+			DFS(A, x.info, color)
+	x = x.next
+	color[v] = 2
+
+
+lunghezza_lista(l)
+	if l== NULL
+		return 0
+	lunghezza =0
+	x = l.head
+	while x!= NULL
+		lunghezza ++
+		x = x.next
+	return lunghezza
+
+
+
